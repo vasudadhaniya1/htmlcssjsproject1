@@ -51,37 +51,50 @@ const updateAge = () => {
   secondEl.innerHTML = makeTwoDigitNumber(second);
 };
 
-const setDOBHandler = () => {
-  const dateString = dobInputEl.value;
-
-  dateOfBirth = dateString ? new Date(dateString) : null;
-
+const localStorageGetter = () => {
+   
   const year = localStorage.getItem('year');
   const month = localStorage.getItem('month');
   const date = localStorage.getItem('date');
   if(year && month && date) {
     dateOfBirth = new Date(year,month,date);
   }
+  updateAge();
+};
 
-  
+const contentToggler =() => {
+  updateAge();
   if (dateOfBirth) {
 
-    localStorage.setItem('year',dateOfBirth.getFullYear());
-    localStorage.setItem('month',dateOfBirth.getMonth());
-    localStorage.setItem('date',dateOfBirth.getDate());
     initialTextEl.classList.add("hide");
     afterDOBBtnTxtEl.classList.remove("hide");
     setInterval(() => updateAge(), 1000);
   } else {
     afterDOBBtnTxtEl.classList.add("hide");
     initialTextEl.classList.remove("hide");
+  }
+}
+
+
+const setDOBHandler = () => {
+  const dateString = dobInputEl.value;
+
+  dateOfBirth = dateString ? new Date(dateString) : null;
+
+  if (dateOfBirth) {
+
+    localStorage.setItem('year',dateOfBirth.getFullYear());
+    localStorage.setItem('month',dateOfBirth.getMonth());
+    localStorage.setItem('date',dateOfBirth.getDate());
+    
   } 
+  
+  contentToggler();
+  setInterval(() => updateAge(), 1000);
 };
 
-setDOBHandler();
-
-
-
+localStorageGetter();
+contentToggler();
 
 settingCogEl.addEventListener("click", toggleDateOfBirthSelector);
 dobButtonEl.addEventListener("click", setDOBHandler);
